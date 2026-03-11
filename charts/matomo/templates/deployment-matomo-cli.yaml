@@ -59,6 +59,8 @@ spec:
         volumeMounts:
           - name: static-data
             mountPath: /var/www/html
+          - name: tmp-data
+            mountPath: /tmp
           - name: matomo-supervisor-tracker
             mountPath: /etc/supervisor.d
             readOnly: true
@@ -76,6 +78,8 @@ spec:
         configMap:
           name: matomo-configuration
       - name: static-data
+        emptyDir: {}
+      - name: tmp-data
         emptyDir: {}
       - name: matomo-supervisor-tracker
         configMap:

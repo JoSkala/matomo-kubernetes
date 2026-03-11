@@ -100,6 +100,8 @@ initContainers:
     volumeMounts:
       - name: static-data
         mountPath: /var/www/html
+      - name: tmp-data
+        mountPath: /tmp
       - name: matomo-configuration
         mountPath: /tmp/matomo/
         readOnly: true

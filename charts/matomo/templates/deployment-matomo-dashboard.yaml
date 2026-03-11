@@ -38,6 +38,9 @@ spec:
         env:
         - name: PHP_FPM_FIX_PROCESS_COUNT
           value: "true"
+        volumeMounts:
+          - name: tmp-data
+            mountPath: /tmp
         resources:
           limits:
             memory: 128Mi
@@ -77,6 +80,8 @@ spec:
           - name: static-data
             mountPath: /var/www/html
             readOnly: true
+          - name: tmp-data
+            mountPath: /tmp
         ports:
         - containerPort: 8080
       - name: matomo
@@ -117,6 +122,8 @@ spec:
           - name: matomo-dashboard-php
             mountPath: /usr/local/etc/php/conf.d/zz-global.ini
             subPath: zz-global.ini
+          - name: tmp-data
+            mountPath: /tmp
 {{- if .Values.extraVolumeMounts }}
 {{ toYaml .Values.extraVolumeMounts | indent 10 }}
 {{- end }}
@@ -164,6 +171,8 @@ spec:
         configMap:
           name: matomo-dashboard-php
       - name: static-data
+        emptyDir: {}
+      - name: tmp-data
         emptyDir: {}
 {{- if .Values.extraVolumes }}
 {{ toYaml .Values.extraVolumes | indent 6 }}

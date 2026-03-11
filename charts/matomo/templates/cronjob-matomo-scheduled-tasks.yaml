@@ -38,6 +38,8 @@ spec:
             volumeMounts:
               - name: static-data
                 mountPath: /var/www/html
+              - name: tmp-data
+                mountPath: /tmp
               - name: matomo-scheduledtasks-php
                 mountPath: /usr/local/etc/php/conf.d/zz-global.ini
                 subPath: zz-global.ini
@@ -56,6 +58,8 @@ spec:
             configMap:
               name: matomo-configuration
           - name: static-data
+            emptyDir: {}
+          - name: tmp-data
             emptyDir: {}
           - name: matomo-scheduledtasks-php
             configMap:

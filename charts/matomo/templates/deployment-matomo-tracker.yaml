@@ -32,6 +32,9 @@ spec:
 {{ include "matomo.containerSecurityContext" . | nindent 8 }}
         image: hipages/php-fpm_exporter:2.2.0
         imagePullPolicy: Always
+        volumeMounts:
+          - name: tmp-data
+            mountPath: /tmp
         resources:
           limits:
             cpu: 40m
@@ -68,6 +71,8 @@ spec:
           - name: static-data
             mountPath: /var/www/html
             readOnly: true
+          - name: tmp-data
+            mountPath: /tmp
         ports:
         - containerPort: 8080
       - name: matomo
@@ -106,6 +111,8 @@ spec:
           - name: matomo-phpfpm-tracker
             mountPath: /usr/local/etc/php-fpm.d/zz-global.conf
             subPath: zz-global.conf
+          - name: tmp-data
+            mountPath: /tmp
         {{- with .Values.matomo.livenessProbe }}
         livenessProbe: {{- toYaml . | nindent 10 }}
         {{- end }}
@@ -144,6 +151,8 @@ spec:
         configMap:
           name: matomo-configuration
       - name: static-data
+        emptyDir: {}
+      - name: tmp-data
         emptyDir: {}
       - name: matomo-supervisor-tracker
         configMap:

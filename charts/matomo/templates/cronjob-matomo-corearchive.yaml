@@ -36,6 +36,8 @@ spec:
             volumeMounts:
               - name: static-data
                 mountPath: /var/www/html
+              - name: tmp-data
+                mountPath: /tmp
               - name: matomo-phpfpm
                 mountPath: /usr/local/etc/php-fpm.d/zz-global.conf
                 subPath: zz-global.conf
@@ -57,6 +59,8 @@ spec:
             configMap:
               name: matomo-configuration
           - name: static-data
+            emptyDir: {}
+          - name: tmp-data
             emptyDir: {}
           - name: matomo-phpfpm
             configMap:
