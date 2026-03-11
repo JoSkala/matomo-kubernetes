@@ -39,14 +39,32 @@ imagePullSecrets:
       key: {{ .Values.matomo.license.secretKeyRef.key }}
 {{- end -}}
 {{- end -}}
+
+{{- define "matomo.podSecurityContext" -}}
+{{- if .Values.matomo.podSecurityContext.enabled }}
+securityContext:
+{{- omit .Values.matomo.podSecurityContext "enabled" | toYaml | nindent 2 }}
+{{- end }}
+{{- end -}}
+
+{{- define "matomo.containerSecurityContext" -}}
+{{- if .Values.matomo.containerSecurityContext.enabled }}
+securityContext:
+{{- omit .Values.matomo.containerSecurityContext "enabled" | toYaml | nindent 2 }}
+{{- end }}
+{{- end -}}
+
+{{- define "nginx.containerSecurityContext" -}}
+{{- if .Values.nginx.containerSecurityContext.enabled }}
+securityContext:
+{{- omit .Values.nginx.containerSecurityContext "enabled" | toYaml | nindent 2 }}
+{{- end }}
+{{- end -}}
 {{- define "matomo.init" -}}
 initContainers:
   - name: matomo-init
     image: {{.Values.matomo.image}}
-    securityContext:
-      runAsUser: {{.Values.matomo.runAsUser}}
-      privileged: false
-      allowPrivilegeEscalation: false
+{{ include "matomo.containerSecurityContext" . | nindent 4 }}
     imagePullPolicy: Always
     env:
     - name: MATOMO_FIRST_USER_NAME

@@ -25,13 +25,11 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap-matomo.yaml") . | sha256sum }}
     spec:
+{{ include "matomo.podSecurityContext" . | nindent 6 }}
 {{ include "matomo.init" . | nindent 6 }}
       containers:
       - name: fpm-metrics
-        securityContext:
-          runAsUser: {{.Values.matomo.runAsUser}}
-          privileged: false
-          allowPrivilegeEscalation: false
+{{ include "matomo.containerSecurityContext" . | nindent 8 }}
         image: hipages/php-fpm_exporter:2.2.0
         imagePullPolicy: Always
         resources:
@@ -53,10 +51,7 @@ spec:
         {{- with .Values.matomo.tracker.nginx.livenessProbe }}
         livenessProbe: {{- toYaml . | nindent 10 }}
         {{- end }}
-        securityContext:
-          runAsUser: {{.Values.nginx.runAsUser}}
-          privileged: false
-          allowPrivilegeEscalation: false
+{{ include "nginx.containerSecurityContext" . | nindent 8 }}
         volumeMounts:
           - name: nginx-conf
             mountPath: /etc/nginx/nginx.conf
@@ -81,10 +76,7 @@ spec:
         resources:
 {{ toYaml .Values.matomo.tracker.resources | indent 10 }}
         {{- end }}
-        securityContext:
-          runAsUser: {{.Values.matomo.runAsUser}}
-          privileged: false
-          allowPrivilegeEscalation: false
+{{ include "matomo.containerSecurityContext" . | nindent 8 }}
         imagePullPolicy: Always
         env:
         - name: MATOMO_DB_PASSWORD

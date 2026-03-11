@@ -86,7 +86,8 @@ A Helm chart for Matomo
 | matomo.queuedTrackingMonitor.enabled | bool | `true` |  |
 | matomo.queuedTrackingProcess.replicas | int | `1` |  |
 | matomo.readinessProbe | object | `{}` |  |
-| matomo.runAsUser | int | `82` | run container as user id. |
+| matomo.podSecurityContext | object | `{"enabled":true,"fsGroup":82,"fsGroupChangePolicy":"Always","seccompProfile":{"type":"RuntimeDefault"}}` | Pod-level security context for all Matomo workloads. |
+| matomo.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"enabled":true,"privileged":false,"readOnlyRootFilesystem":false,"runAsGroup":82,"runAsNonRoot":true,"runAsUser":82}` | Container-level security context for Matomo containers. |
 | matomo.tracker.enabled | bool | `true` |  |
 | matomo.tracker.hostname | string | `"my.host"` |  |
 | matomo.tracker.ingress.annotations."digitalist.cloud/instance" | string | `"matomo"` |  |
@@ -113,7 +114,7 @@ A Helm chart for Matomo
 | namespace | string | `"matomo"` | Namespace to install Matomo in, default matomo. |
 | nginx.image | string | `"digitalist/nginx:1.21.6"` |  |
 | nginx.imagePullSecrets | list | `[]` |  |
-| nginx.runAsUser | int | `100` |  |
+| nginx.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"enabled":true,"privileged":false,"readOnlyRootFilesystem":true,"runAsGroup":100,"runAsNonRoot":true,"runAsUser":100}` | Container-level security context for NGINX containers. |
 | nodeSelector | object | `{}` | Node labels for pod assignment. |
 | tolerations | list | `[]` | Tolerations for pod assignment |
 

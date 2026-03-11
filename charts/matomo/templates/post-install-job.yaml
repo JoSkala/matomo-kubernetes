@@ -23,11 +23,13 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name | quote }}
         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     spec:
+{{ include "matomo.podSecurityContext" . | nindent 6 }}
       restartPolicy: Never
 {{ include "matomo.images.pullSecrets" ( dict "images" (list .Values.matomo) "global" .Values.global) | nindent 6 }}
       containers:
       - name: post-install-matomo
         image: {{.Values.matomo.image}}
+{{ include "matomo.containerSecurityContext" . | nindent 8 }}
         lifecycle:
           postStart:
             exec:
